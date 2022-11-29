@@ -6,11 +6,6 @@
 <p align="left"> <img src="https://komarev.com/ghpvc/?username=hemantrajpal-9018&label=Profile%20views&color=0e75b6&style=flat" alt="hemantrajpal-9018" /> </p>
 
 
-- 🔭 I’m currently working on **Developing Python scripts for Vibrational Frequeny Analysis of Protein**
-
-- 💬 Ask me about **DevOPs,AWS,GCP**
-
-- 📫 How to reach me **hemant.rajpal2021@gmail.com**
 
 <h3 align="left">Connect with me:</h3>
 <p align="left">
