@@ -1,4 +1,4 @@
-# 💫 About Me:
+# About Me:
 🔭 I’m currently working on AI models<br>👯 I’m looking to collaborate on AI app dev<br>🤝 I’m looking for help with AI/ML<br>🌱 I’m currently learning AI/ML<br>💬 Ask me about Devops/Cloud/Python/C/C++/Malware Analysis<br>⚡ Fun fact : I study on Sat/Sun too 
 
 
