@@ -1,0 +1,44 @@
+<svg width="1200" height="300" viewBox="0 0 1200 300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0a0f1f"/><stop offset="1" stop-color="#0b1230"/>
+    </linearGradient>
+    <linearGradient id="stroke" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#00ffd5"/><stop offset="1" stop-color="#6f00ff"/>
+      <animate attributeName="x1" values="0;1;0" dur="8s" repeatCount="indefinite"/>
+      <animate attributeName="x2" values="1;0;1" dur="8s" repeatCount="indefinite"/>
+    </linearGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="1.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect width="1200" height="300" fill="url(#g)"/>
+  <g stroke="url(#stroke)" stroke-width="1" opacity=".75" filter="url(#glow)">
+    <g>
+      <g transform="translate(0,0)">
+        <line x1="-200" y1="260" x2="1400" y2="260"/>
+        <line x1="-200" y1="230" x2="1400" y2="230"/>
+        <line x1="-200" y1="205" x2="1400" y2="205"/>
+        <line x1="-200" y1="185" x2="1400" y2="185"/>
+        <line x1="-200" y1="170" x2="1400" y2="170"/>
+      </g>
+      <animateTransform attributeName="transform" type="translate" values="0,0;0,20;0,0" dur="6s" repeatCount="indefinite"/>
+    </g>
+    <g>
+      <line x1="0" y1="300" x2="600" y2="140"/>
+      <line x1="120" y1="300" x2="620" y2="140"/>
+      <line x1="240" y1="300" x2="640" y2="140"/>
+      <line x1="360" y1="300" x2="660" y2="140"/>
+      <line x1="480" y1="300" x2="680" y2="140"/>
+      <line x1="600" y1="300" x2="700" y2="140"/>
+      <line x1="720" y1="300" x2="720" y2="140"/>
+      <line x1="840" y1="300" x2="740" y2="140"/>
+      <line x1="960" y1="300" x2="760" y2="140"/>
+      <line x1="1080" y1="300" x2="780" y2="140"/>
+      <line x1="1200" y1="300" x2="800" y2="140"/>
+      <animateTransform attributeName="transform" type="skewX" values="0;3;0" dur="7s" repeatCount="indefinite"/>
+    </g>
+  </g>
+  <g font-family="Inter,Segoe UI,Arial" font-weight="800" text-anchor="middle">
+    <text x="600" y="120" font-size="44" fill="#e6f7ff">HEMANT RAJPAL</text>
+    <text x="600" y="152" font-size="16" fill="#9adfe0">AI and ML, Cloud and DevOps, Python and C or C++</text>
+  </g>
+</svg>
