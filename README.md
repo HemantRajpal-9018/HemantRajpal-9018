@@ -40,6 +40,7 @@ These will appear after the included GitHub Actions run once.
   <img src="profile-3d-contrib/profile-night-rainbow.svg" alt="3D contributions" />
 </p>
 
+
 <!-- Breakout game from contributions -->
 <p align="center">
   <picture>
@@ -48,6 +49,7 @@ These will appear after the included GitHub Actions run once.
     <img alt="Breakout from contributions" src="images/breakout-light.svg" />
   </picture>
 </p>
+
 
 ---
 
