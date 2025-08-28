@@ -23,8 +23,7 @@
 
 ---
 
-### Animated widgets (SVGs that render in README)
-These will appear after the included GitHub Actions run once.
+
 
 <!-- Snake -->
 <p align="center">
@@ -36,9 +35,12 @@ These will appear after the included GitHub Actions run once.
 </p>
 
 <!-- 3D Contributions -->
+<!-- 3D contributions -->
 <p align="center">
-  <img src="profile-3d-contrib/profile-night-rainbow.svg" alt="3D contributions" />
+  <!-- pick the exact filename that exists in your repo folder -->
+  <img src="profile-3d-contrib/profile-night-rainbow.svg" width="980" alt="3D contributions"/>
 </p>
+
 
 
 <!-- Breakout game from contributions -->
