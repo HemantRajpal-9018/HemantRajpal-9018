@@ -1,3 +1,4 @@
+# .github/workflows/breakout.yml
 name: Generate Breakout SVG
 on:
   schedule:
@@ -19,8 +20,10 @@ jobs:
       - name: Move and commit SVGs
         run: |
           mkdir -p images
-          mv output/light.svg images/breakout-light.svg
-          mv output/dark.svg images/breakout-dark.svg
+          ls -R
+          # grab the produced files regardless of exact file names
+          mv output/*light*.svg images/breakout-light.svg
+          mv output/*dark*.svg images/breakout-dark.svg
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add images/breakout-*.svg
