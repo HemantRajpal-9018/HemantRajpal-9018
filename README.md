@@ -71,7 +71,12 @@ A Python-based research agent that catalogues the latest reasoning-focused langu
 | **💡 Innovation scoring** | ❌ | ✅ Multi-dimensional opportunity scoring (Impact × Feasibility × Novelty × Timing) |
 | **🎯 Best-fit recommendations** | ❌ | ✅ Use-case-driven model recommendations (math, coding, multi-modal, self-hosted…) |
 | **⚔️ Head-to-head comparisons** | ❌ | ✅ Benchmark deltas, weakness diffs & plain-English verdicts |
+| **⚡ Research velocity** | ❌ | ✅ Provider iteration speed, release cadence, momentum signals |
+| **🛡️ Risk assessment** | ❌ | ✅ Vendor lock-in, deprecation risk, API stability & mitigation notes |
+| **🗺️ Competitive landscape** | ❌ | ✅ Market segment mapping, overlap analysis & underserved opportunities |
+| **🗓️ Research roadmap** | ❌ | ✅ Phased milestones with deliverables, success metrics & timelines |
 | **Comprehensive reports** | ❌ | ✅ `--full` mode combines all modules into one actionable report |
+| **164 regression tests** | ❌ | ✅ Full cross-module regression suite guarding every invariant |
 
 ### Quick Start
 
@@ -83,21 +88,33 @@ python -m ai_researcher                             # plain-text
 python -m ai_researcher --format md                 # Markdown
 python -m ai_researcher --format md -o report.md    # save to file
 
-# NEW: Full comprehensive report (all modules)
+# Full comprehensive report (all modules)
 python -m ai_researcher --full
 python -m ai_researcher --full --format md -o full_report.md
 
-# NEW: Trend forecast
+# Trend forecast
 python -m ai_researcher --trends
 
-# NEW: Innovation opportunity scores
+# Innovation opportunity scores
 python -m ai_researcher --opportunities
 
-# NEW: Head-to-head model comparison
+# Head-to-head model comparison
 python -m ai_researcher --compare "OpenAI o3" "DeepSeek R1"
 
-# NEW: Best-fit model recommendations
+# Best-fit model recommendations
 python -m ai_researcher --recommend
+
+# Research velocity analysis (v3)
+python -m ai_researcher --velocity
+
+# Risk assessment matrix (v3)
+python -m ai_researcher --risks
+
+# Competitive landscape map (v3)
+python -m ai_researcher --landscape
+
+# Prioritized research roadmap (v3)
+python -m ai_researcher --roadmap
 
 # List all tracked models
 python -m ai_researcher --list-models
@@ -119,7 +136,7 @@ Adaptive Compute Allocation · Formal Reasoning Verification · Native Multi-Mod
 
 ```bash
 pip install pytest
-python -m pytest tests/ -v
+python -m pytest tests/ -v    # 164 tests across 3 test files
 ```
 
 ---
