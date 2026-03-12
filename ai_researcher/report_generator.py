@@ -52,7 +52,7 @@ def generate_text_report(result: AnalysisResult) -> str:
     lines.append("=" * 78)
     lines.append("  AI RESEARCHER AGENT – REASONING MODEL GAP ANALYSIS")
     lines.append("  Analysis date: 2026-03-12")
-    lines.append(f"  Models analysed: {result.model_count}")
+    lines.append(f"  Models analyzed: {result.model_count}")
     lines.append(
         f"  Gap categories with findings: "
         f"{sum(1 for f in result.findings)}/{len(result.category_coverage)}"
@@ -138,7 +138,7 @@ def generate_markdown_report(result: AnalysisResult) -> str:
     parts.append("# 🔬 AI Researcher Agent – Reasoning Model Gap Analysis")
     parts.append("")
     parts.append(f"**Analysis date:** 2026-03-12  ")
-    parts.append(f"**Models analysed:** {result.model_count}  ")
+    parts.append(f"**Models analyzed:** {result.model_count}  ")
     parts.append(
         f"**Gap categories with findings:** "
         f"{sum(1 for _ in result.findings)}/{len(result.category_coverage)}"

@@ -17,7 +17,7 @@ from typing import List
 class BenchmarkScore:
     """A single benchmark result for a model."""
     benchmark: str
-    score: float          # 0-100 normalised score
+    score: float          # 0-100 normalized score
     details: str = ""
 
 
