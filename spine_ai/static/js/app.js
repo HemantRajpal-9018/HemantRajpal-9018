@@ -362,10 +362,6 @@
             .replace(/^  (\d+)\. (.*)$/gm, '<li>$2</li>')
             .replace(/^  - (.*)$/gm, '<li>$1</li>')
             .replace(/^---$/gm, '<hr>')
-            .replace(/\n\n/g, '</p><p>')
-            .replace(/^(.+)$/gm, function(match) {
-                if (match.startsWith('<')) return match;
-                return match;
-            });
+            .replace(/\n\n/g, '</p><p>');
     }
 })();

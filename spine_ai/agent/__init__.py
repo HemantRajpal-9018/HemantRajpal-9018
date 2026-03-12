@@ -6,12 +6,11 @@ analyzes findings, and synthesizes comprehensive reports.
 """
 
 import asyncio
-import hashlib
 import time
 import uuid
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, AsyncGenerator, Optional
+from typing import AsyncGenerator, Optional
 
 
 class StepStatus(str, Enum):
@@ -245,7 +244,6 @@ def _gather_sources(query: str, domains: list[str]) -> list[Source]:
     sources.extend(DEFAULT_SOURCES[:2])
 
     # Generate query-specific sources
-    query_hash = hashlib.md5(query.encode()).hexdigest()[:8]
     query_words = [w for w in query.split() if len(w) > 3]
     if query_words:
         keyword = query_words[0].capitalize()
