@@ -1,7 +1,8 @@
 """Main agent orchestration module.
 
-``ResearcherAgent`` ties together the knowledge base, gap analyzer, and
-report generator into a single callable interface.
+``ResearcherAgent`` ties together the knowledge base, gap analyzer,
+trend forecaster, model comparator, innovation scorer, and report
+generator into a single callable interface.
 """
 
 from __future__ import annotations
@@ -9,6 +10,16 @@ from __future__ import annotations
 from typing import List, Optional
 
 from ai_researcher.gap_analyzer import AnalysisResult, analyze_gaps
+from ai_researcher.innovation_scorer import (
+    OpportunityReport,
+    score_opportunities,
+)
+from ai_researcher.model_comparator import (
+    ComparisonResult,
+    UseCaseRecommendation,
+    compare_models,
+    recommend_models,
+)
 from ai_researcher.models_knowledge import (
     ReasoningModel,
     get_model_by_name,
@@ -16,9 +27,16 @@ from ai_researcher.models_knowledge import (
     get_reasoning_models,
 )
 from ai_researcher.report_generator import (
+    generate_comparison_text,
+    generate_full_markdown_report,
+    generate_full_text_report,
     generate_markdown_report,
+    generate_opportunities_text,
+    generate_recommendations_text,
     generate_text_report,
+    generate_trends_text,
 )
+from ai_researcher.trend_forecaster import ForecastResult, forecast_trends
 
 
 class ResearcherAgent:
@@ -27,8 +45,10 @@ class ResearcherAgent:
     Usage::
 
         agent = ResearcherAgent()
-        report = agent.run()          # full analysis → text report
-        report = agent.run(fmt="md")  # full analysis → Markdown report
+        report = agent.run()               # full analysis → text report
+        report = agent.run(fmt="md")       # full analysis → Markdown report
+        report = agent.run_full()          # all modules → comprehensive text
+        report = agent.run_full(fmt="md")  # all modules → comprehensive Markdown
     """
 
     def __init__(
@@ -64,11 +84,32 @@ class ResearcherAgent:
         return self._result
 
     # ------------------------------------------------------------------
+    # New differentiating capabilities
+    # ------------------------------------------------------------------
+
+    def forecast(self) -> ForecastResult:
+        """Run trend forecasting on the model landscape."""
+        return forecast_trends(self.models)
+
+    def compare(self, name_a: str, name_b: str) -> ComparisonResult:
+        """Head-to-head comparison of two models."""
+        return compare_models(name_a, name_b, self.models)
+
+    def recommend(self) -> List[UseCaseRecommendation]:
+        """Best-fit model recommendations for common use cases."""
+        return recommend_models(self.models)
+
+    def score_opportunities(self) -> OpportunityReport:
+        """Score each gap by innovation opportunity value."""
+        result = self.analyze()
+        return score_opportunities(result, self.models)
+
+    # ------------------------------------------------------------------
     # Report generation
     # ------------------------------------------------------------------
 
     def run(self, fmt: str = "text") -> str:
-        """Run the full pipeline and return a formatted report.
+        """Run the gap-analysis pipeline and return a formatted report.
 
         Parameters
         ----------
@@ -79,3 +120,27 @@ class ResearcherAgent:
         if fmt == "md":
             return generate_markdown_report(result)
         return generate_text_report(result)
+
+    def run_full(self, fmt: str = "text") -> str:
+        """Run **all** analysis modules and return a comprehensive report.
+
+        Includes: gap analysis, trend forecast, opportunity scores, and
+        best-fit model recommendations.
+
+        Parameters
+        ----------
+        fmt : str
+            ``"text"`` for plain-text output, ``"md"`` for Markdown.
+        """
+        gap_result = self.analyze()
+        trends = self.forecast()
+        opportunities = self.score_opportunities()
+        recommendations = self.recommend()
+
+        if fmt == "md":
+            return generate_full_markdown_report(
+                gap_result, trends, opportunities, recommendations,
+            )
+        return generate_full_text_report(
+            gap_result, trends, opportunities, recommendations,
+        )

@@ -59,19 +59,45 @@
 
 A Python-based research agent that catalogues the latest reasoning-focused language models (as of March 2026) and systematically identifies gaps in their capabilities.
 
+### ⚡ What Makes This Agent Different
+
+> Most AI research tools just *list* models. This one **thinks forward**.
+
+| Feature | Typical Tools | This Agent |
+|---------|--------------|------------|
+| Model catalogue | ✅ | ✅ 10 reasoning models with benchmarks, strengths & weaknesses |
+| Gap analysis | ❌ | ✅ 15-category gap taxonomy with severity, evidence & research directions |
+| **🔮 Trend forecasting** | ❌ | ✅ 8 emerging trends with confidence scores, time horizons & market implications |
+| **💡 Innovation scoring** | ❌ | ✅ Multi-dimensional opportunity scoring (Impact × Feasibility × Novelty × Timing) |
+| **🎯 Best-fit recommendations** | ❌ | ✅ Use-case-driven model recommendations (math, coding, multi-modal, self-hosted…) |
+| **⚔️ Head-to-head comparisons** | ❌ | ✅ Benchmark deltas, weakness diffs & plain-English verdicts |
+| **Comprehensive reports** | ❌ | ✅ `--full` mode combines all modules into one actionable report |
+
 ### Quick Start
 
 ```bash
 pip install -r requirements.txt
 
-# Plain-text report
-python -m ai_researcher
+# Gap analysis
+python -m ai_researcher                             # plain-text
+python -m ai_researcher --format md                 # Markdown
+python -m ai_researcher --format md -o report.md    # save to file
 
-# Markdown report
-python -m ai_researcher --format md
+# NEW: Full comprehensive report (all modules)
+python -m ai_researcher --full
+python -m ai_researcher --full --format md -o full_report.md
 
-# Save to file
-python -m ai_researcher --format md -o report.md
+# NEW: Trend forecast
+python -m ai_researcher --trends
+
+# NEW: Innovation opportunity scores
+python -m ai_researcher --opportunities
+
+# NEW: Head-to-head model comparison
+python -m ai_researcher --compare "OpenAI o3" "DeepSeek R1"
+
+# NEW: Best-fit model recommendations
+python -m ai_researcher --recommend
 
 # List all tracked models
 python -m ai_researcher --list-models
@@ -84,6 +110,10 @@ OpenAI o3 · OpenAI o3-mini · OpenAI o1 · DeepSeek R1 · Gemini 2.5 Pro · Gem
 ### Gap Categories Analysed
 
 Faithfulness · Hallucination · Self-correction · Spatial reasoning · Temporal reasoning · Common sense · Mathematical proof · Adversarial robustness · Calibration · Efficiency · Multi-modal reasoning · Long-horizon planning · Abstraction · Compositionality · Tool-use reasoning
+
+### 🔮 Trend Forecasts Tracked
+
+Adaptive Compute Allocation · Formal Reasoning Verification · Native Multi-Modal CoT · Reasoning Distillation · RL as Training Signal · Agentic Reasoning · Open-Source Parity · Safety Alignment for Reasoning
 
 ### Running Tests
 

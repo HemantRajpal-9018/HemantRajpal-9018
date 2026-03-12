@@ -1,7 +1,8 @@
 """Report generator for gap analysis results.
 
 Produces human-readable plain-text and Markdown reports from
-``AnalysisResult`` objects.
+``AnalysisResult`` objects, trend forecasts, opportunity scores,
+model comparisons, and recommendations.
 """
 
 from __future__ import annotations
@@ -20,6 +21,18 @@ _SEVERITY_EMOJI = {
     "high": "🟠",
     "medium": "🟡",
     "low": "🟢",
+}
+
+_STATUS_EMOJI = {
+    "emerging": "🌱",
+    "accelerating": "🚀",
+    "maturing": "📈",
+}
+
+_TIER_EMOJI = {
+    "Tier 1": "🥇",
+    "Tier 2": "🥈",
+    "Tier 3": "🥉",
 }
 
 
@@ -178,3 +191,299 @@ def generate_markdown_report(result: AnalysisResult) -> str:
     parts.append("")
 
     return "\n".join(parts)
+
+
+# ===================================================================
+# NEW REPORT SECTIONS – Trends, Comparisons, Opportunities, Recs
+# ===================================================================
+
+# ---------------------------------------------------------------------------
+# Trend forecast – plain text
+# ---------------------------------------------------------------------------
+
+def generate_trends_text(forecast) -> str:
+    """Render trend forecast as plain text."""
+    from ai_researcher.trend_forecaster import ForecastResult
+    lines: List[str] = []
+    lines.append("=" * 78)
+    lines.append("  EMERGING TRENDS IN REASONING AI")
+    lines.append("=" * 78)
+    lines.append("")
+
+    for i, trend in enumerate(forecast.trends, 1):
+        lines.append(
+            f"  [{trend.status.upper()}] Trend #{i}: {trend.title}"
+        )
+        lines.append("-" * 78)
+        lines.append(_wrap(f"  {trend.description}"))
+        lines.append("")
+        lines.append(f"  Confidence   : {trend.confidence:.0%}")
+        lines.append(f"  Time horizon : {trend.time_horizon}")
+        lines.append(f"  Categories   : {', '.join(trend.affected_categories)}")
+        lines.append("")
+        if trend.market_implications:
+            lines.append("  Market implications:")
+            for mi in trend.market_implications:
+                lines.append(f"    ★ {mi}")
+            lines.append("")
+        lines.append("")
+
+    return "\n".join(lines)
+
+
+# ---------------------------------------------------------------------------
+# Trend forecast – markdown
+# ---------------------------------------------------------------------------
+
+def _generate_trends_markdown(forecast) -> str:
+    """Render trend forecast as Markdown."""
+    parts: List[str] = []
+    parts.append("## 🔮 Emerging Trends in Reasoning AI")
+    parts.append("")
+
+    for i, trend in enumerate(forecast.trends, 1):
+        emoji = _STATUS_EMOJI.get(trend.status, "📊")
+        parts.append(f"### {emoji} Trend #{i}: {trend.title}")
+        parts.append("")
+        parts.append(f"| Field | Value |")
+        parts.append(f"|-------|-------|")
+        parts.append(f"| **Status** | {trend.status} |")
+        parts.append(f"| **Confidence** | {trend.confidence:.0%} |")
+        parts.append(f"| **Time horizon** | {trend.time_horizon} |")
+        parts.append(
+            f"| **Affected categories** | "
+            f"{', '.join(f'`{c}`' for c in trend.affected_categories)} |"
+        )
+        parts.append("")
+        parts.append(trend.description)
+        parts.append("")
+
+        if trend.supporting_evidence:
+            parts.append("**Supporting evidence:**")
+            for ev in trend.supporting_evidence[:5]:
+                parts.append(f"- {ev}")
+            parts.append("")
+
+        if trend.market_implications:
+            parts.append("**Market implications:**")
+            for mi in trend.market_implications:
+                parts.append(f"- ★ {mi}")
+            parts.append("")
+
+        parts.append("---")
+        parts.append("")
+
+    return "\n".join(parts)
+
+
+# ---------------------------------------------------------------------------
+# Model comparison – plain text
+# ---------------------------------------------------------------------------
+
+def generate_comparison_text(comparison) -> str:
+    """Render a head-to-head comparison as plain text."""
+    lines: List[str] = []
+    lines.append("=" * 78)
+    lines.append(
+        f"  HEAD-TO-HEAD: {comparison.model_a} vs {comparison.model_b}"
+    )
+    lines.append("=" * 78)
+    lines.append("")
+
+    if comparison.benchmark_deltas:
+        lines.append("  Benchmark comparison:")
+        for d in comparison.benchmark_deltas:
+            winner = (
+                comparison.model_a if d.delta > 0
+                else comparison.model_b if d.delta < 0
+                else "Tie"
+            )
+            lines.append(
+                f"    {d.benchmark:<25} "
+                f"{d.score_a:>6.1f} vs {d.score_b:>6.1f}  "
+                f"(Δ {d.delta:+.1f}, {winner})"
+            )
+        lines.append("")
+
+    if comparison.shared_weaknesses:
+        lines.append("  Shared weaknesses:")
+        for sw in comparison.shared_weaknesses:
+            lines.append(f"    ⚠ {sw}")
+        lines.append("")
+
+    lines.append(f"  Verdict: {comparison.verdict}")
+    lines.append("")
+    return "\n".join(lines)
+
+
+# ---------------------------------------------------------------------------
+# Opportunity scores – plain text
+# ---------------------------------------------------------------------------
+
+def generate_opportunities_text(report) -> str:
+    """Render opportunity scores as plain text."""
+    lines: List[str] = []
+    lines.append("=" * 78)
+    lines.append("  INNOVATION OPPORTUNITY SCORES")
+    lines.append("=" * 78)
+    lines.append("")
+
+    for opp in report.opportunities:
+        lines.append(
+            f"  [{opp.priority_tier}] {opp.title}  "
+            f"(composite: {opp.composite}/10)"
+        )
+        lines.append(
+            f"    Impact={opp.impact}  Feasibility={opp.feasibility}  "
+            f"Novelty={opp.novelty}  Timing={opp.market_timing}"
+        )
+        lines.append(f"    {_wrap(opp.rationale)}")
+        lines.append("")
+
+    if report.top_3_summary:
+        lines.append("  TOP 3 OPPORTUNITIES:")
+        for line in report.top_3_summary.split("\n"):
+            lines.append(f"    {line}")
+        lines.append("")
+
+    return "\n".join(lines)
+
+
+# ---------------------------------------------------------------------------
+# Opportunity scores – markdown
+# ---------------------------------------------------------------------------
+
+def _generate_opportunities_markdown(report) -> str:
+    """Render opportunity scores as Markdown."""
+    parts: List[str] = []
+    parts.append("## 💡 Innovation Opportunity Scores")
+    parts.append("")
+    parts.append(
+        "Each gap is scored on four dimensions (0-10): "
+        "**Impact**, **Feasibility**, **Novelty**, and **Market Timing**."
+    )
+    parts.append("")
+
+    parts.append(
+        "| Tier | Category | Composite | Impact | Feasibility "
+        "| Novelty | Timing |"
+    )
+    parts.append(
+        "|------|----------|-----------|--------|-------------|"
+        "---------|--------|"
+    )
+    for opp in report.opportunities:
+        emoji = _TIER_EMOJI.get(opp.priority_tier, "")
+        parts.append(
+            f"| {emoji} {opp.priority_tier} | `{opp.category}` "
+            f"| **{opp.composite}** | {opp.impact} | {opp.feasibility} "
+            f"| {opp.novelty} | {opp.market_timing} |"
+        )
+    parts.append("")
+
+    if report.top_3_summary:
+        parts.append("### 🏆 Top 3 Opportunities")
+        parts.append("")
+        parts.append(report.top_3_summary)
+        parts.append("")
+
+    # Detailed rationales
+    parts.append("### Detailed Rationales")
+    parts.append("")
+    for opp in report.opportunities:
+        emoji = _TIER_EMOJI.get(opp.priority_tier, "")
+        parts.append(f"**{emoji} {opp.title}** ({opp.priority_tier})")
+        parts.append("")
+        parts.append(f"> {opp.rationale}")
+        parts.append("")
+
+    parts.append("---")
+    parts.append("")
+    return "\n".join(parts)
+
+
+# ---------------------------------------------------------------------------
+# Recommendations – plain text
+# ---------------------------------------------------------------------------
+
+def generate_recommendations_text(recommendations) -> str:
+    """Render use-case recommendations as plain text."""
+    lines: List[str] = []
+    lines.append("=" * 78)
+    lines.append("  BEST-FIT MODEL RECOMMENDATIONS")
+    lines.append("=" * 78)
+    lines.append("")
+
+    for rec in recommendations:
+        lines.append(f"  Use case: {rec.use_case}")
+        lines.append(f"    ★ Recommended : {rec.recommended_model}")
+        lines.append(f"    ○ Runner-up   : {rec.runner_up}")
+        lines.append(f"    {rec.reason}")
+        lines.append("")
+
+    return "\n".join(lines)
+
+
+# ---------------------------------------------------------------------------
+# Recommendations – markdown
+# ---------------------------------------------------------------------------
+
+def _generate_recommendations_markdown(recommendations) -> str:
+    """Render use-case recommendations as Markdown."""
+    parts: List[str] = []
+    parts.append("## 🎯 Best-Fit Model Recommendations")
+    parts.append("")
+
+    parts.append("| Use Case | ★ Recommended | Runner-Up |")
+    parts.append("|----------|---------------|-----------|")
+    for rec in recommendations:
+        parts.append(
+            f"| {rec.use_case} | **{rec.recommended_model}** "
+            f"| {rec.runner_up} |"
+        )
+    parts.append("")
+    parts.append("---")
+    parts.append("")
+    return "\n".join(parts)
+
+
+# ===================================================================
+# Full comprehensive reports (all modules combined)
+# ===================================================================
+
+def generate_full_text_report(
+    gap_result,
+    trends,
+    opportunities,
+    recommendations,
+) -> str:
+    """Combine all analysis modules into one comprehensive text report."""
+    sections = [
+        generate_text_report(gap_result),
+        "",
+        generate_trends_text(trends),
+        "",
+        generate_opportunities_text(opportunities),
+        "",
+        generate_recommendations_text(recommendations),
+    ]
+    return "\n".join(sections)
+
+
+def generate_full_markdown_report(
+    gap_result,
+    trends,
+    opportunities,
+    recommendations,
+) -> str:
+    """Combine all analysis modules into one comprehensive Markdown report."""
+    sections = [
+        generate_markdown_report(gap_result),
+        "",
+        _generate_trends_markdown(trends),
+        "",
+        _generate_opportunities_markdown(opportunities),
+        "",
+        _generate_recommendations_markdown(recommendations),
+    ]
+    return "\n".join(sections)
