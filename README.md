@@ -55,6 +55,45 @@
 
 ---
 
+## 🔬 AI Researcher Agent – Reasoning Model Gap Analysis
+
+A Python-based research agent that catalogues the latest reasoning-focused language models (as of March 2026) and systematically identifies gaps in their capabilities.
+
+### Quick Start
+
+```bash
+pip install -r requirements.txt
+
+# Plain-text report
+python -m ai_researcher
+
+# Markdown report
+python -m ai_researcher --format md
+
+# Save to file
+python -m ai_researcher --format md -o report.md
+
+# List all tracked models
+python -m ai_researcher --list-models
+```
+
+### Models Tracked
+
+OpenAI o3 · OpenAI o3-mini · OpenAI o1 · DeepSeek R1 · Gemini 2.5 Pro · Gemini 2.0 Flash Thinking · Claude 3.7 Sonnet · QwQ-32B · Grok 3 · Phi-4-reasoning
+
+### Gap Categories Analysed
+
+Faithfulness · Hallucination · Self-correction · Spatial reasoning · Temporal reasoning · Common sense · Mathematical proof · Adversarial robustness · Calibration · Efficiency · Multi-modal reasoning · Long-horizon planning · Abstraction · Compositionality · Tool-use reasoning
+
+### Running Tests
+
+```bash
+pip install pytest
+python -m pytest tests/ -v
+```
+
+---
+
 <p align="center">
   <img src="https://github-readme-stats.vercel.app/api?username=HemantRajpal-9018&show_icons=true&theme=radical" height="165" />
   <img src="https://github-readme-streak-stats.herokuapp.com/?user=HemantRajpal-9018&theme=radical" height="165" />
