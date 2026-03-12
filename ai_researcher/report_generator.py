@@ -456,6 +456,10 @@ def generate_full_text_report(
     trends,
     opportunities,
     recommendations,
+    velocity=None,
+    risks=None,
+    landscape=None,
+    roadmap=None,
 ) -> str:
     """Combine all analysis modules into one comprehensive text report."""
     sections = [
@@ -467,6 +471,14 @@ def generate_full_text_report(
         "",
         generate_recommendations_text(recommendations),
     ]
+    if velocity is not None:
+        sections += ["", generate_velocity_text(velocity)]
+    if risks is not None:
+        sections += ["", generate_risks_text(risks)]
+    if landscape is not None:
+        sections += ["", generate_landscape_text(landscape)]
+    if roadmap is not None:
+        sections += ["", generate_roadmap_text(roadmap)]
     return "\n".join(sections)
 
 
@@ -475,6 +487,10 @@ def generate_full_markdown_report(
     trends,
     opportunities,
     recommendations,
+    velocity=None,
+    risks=None,
+    landscape=None,
+    roadmap=None,
 ) -> str:
     """Combine all analysis modules into one comprehensive Markdown report."""
     sections = [
@@ -486,4 +502,296 @@ def generate_full_markdown_report(
         "",
         _generate_recommendations_markdown(recommendations),
     ]
+    if velocity is not None:
+        sections += ["", _generate_velocity_markdown(velocity)]
+    if risks is not None:
+        sections += ["", _generate_risks_markdown(risks)]
+    if landscape is not None:
+        sections += ["", _generate_landscape_markdown(landscape)]
+    if roadmap is not None:
+        sections += ["", _generate_roadmap_markdown(roadmap)]
     return "\n".join(sections)
+
+
+# ===================================================================
+# Competitive edge report sections (v3)
+# ===================================================================
+
+# ---------------------------------------------------------------------------
+# Research velocity – plain text
+# ---------------------------------------------------------------------------
+
+def generate_velocity_text(velocity_report) -> str:
+    """Render research velocity as plain text."""
+    lines: List[str] = []
+    lines.append("=" * 78)
+    lines.append("  RESEARCH VELOCITY ANALYSIS")
+    lines.append("=" * 78)
+    lines.append("")
+    lines.append(f"  {velocity_report.summary}")
+    lines.append("")
+
+    for pv in velocity_report.providers:
+        lines.append(f"  {pv.provider} [{pv.velocity_rating.upper()}]")
+        lines.append("-" * 78)
+        lines.append(f"    Models         : {pv.model_count}")
+        lines.append(f"    Latest release : {pv.latest_release}")
+        lines.append(f"    Release span   : {pv.release_span_months} months")
+        lines.append(f"    Avg benchmark  : {pv.avg_benchmark_score}")
+        lines.append(f"    Open-source    : {pv.open_source_ratio:.0%}")
+        if pv.momentum_signals:
+            lines.append("    Momentum signals:")
+            for sig in pv.momentum_signals:
+                lines.append(f"      ⚡ {sig}")
+        lines.append("")
+
+    return "\n".join(lines)
+
+
+# ---------------------------------------------------------------------------
+# Research velocity – markdown
+# ---------------------------------------------------------------------------
+
+def _generate_velocity_markdown(velocity_report) -> str:
+    """Render research velocity as Markdown."""
+    parts: List[str] = []
+    parts.append("## ⚡ Research Velocity Analysis")
+    parts.append("")
+    parts.append(velocity_report.summary)
+    parts.append("")
+
+    parts.append("| Provider | Rating | Models | Latest | Avg Score | OSS Ratio |")
+    parts.append("|----------|--------|--------|--------|-----------|-----------|")
+    for pv in velocity_report.providers:
+        parts.append(
+            f"| {pv.provider} | **{pv.velocity_rating}** | {pv.model_count} "
+            f"| {pv.latest_release} | {pv.avg_benchmark_score} | {pv.open_source_ratio:.0%} |"
+        )
+    parts.append("")
+
+    for pv in velocity_report.providers:
+        if pv.momentum_signals:
+            parts.append(f"**{pv.provider}** momentum signals:")
+            for sig in pv.momentum_signals:
+                parts.append(f"- ⚡ {sig}")
+            parts.append("")
+
+    parts.append("---")
+    parts.append("")
+    return "\n".join(parts)
+
+
+# ---------------------------------------------------------------------------
+# Risk assessment – plain text
+# ---------------------------------------------------------------------------
+
+def generate_risks_text(risk_report) -> str:
+    """Render risk assessment as plain text."""
+    lines: List[str] = []
+    lines.append("=" * 78)
+    lines.append("  RISK ASSESSMENT MATRIX")
+    lines.append("=" * 78)
+    lines.append("")
+    lines.append(f"  {risk_report.summary}")
+    lines.append("")
+
+    for rs in risk_report.scores:
+        lines.append(f"  {rs.model_name} ({rs.provider}) [{rs.risk_tier.upper()} RISK]")
+        lines.append("-" * 78)
+        lines.append(f"    Vendor lock-in    : {rs.vendor_lock_in}/10")
+        lines.append(f"    Deprecation risk  : {rs.deprecation_risk}/10")
+        lines.append(f"    API stability     : {rs.api_stability}/10")
+        lines.append(f"    Ecosystem maturity: {rs.ecosystem_maturity}/10")
+        lines.append(f"    Composite risk    : {rs.composite_risk}")
+        if rs.mitigation_notes:
+            lines.append("    Mitigations:")
+            for note in rs.mitigation_notes:
+                lines.append(f"      → {note}")
+        lines.append("")
+
+    return "\n".join(lines)
+
+
+# ---------------------------------------------------------------------------
+# Risk assessment – markdown
+# ---------------------------------------------------------------------------
+
+def _generate_risks_markdown(risk_report) -> str:
+    """Render risk assessment as Markdown."""
+    parts: List[str] = []
+    parts.append("## 🛡️ Risk Assessment Matrix")
+    parts.append("")
+    parts.append(risk_report.summary)
+    parts.append("")
+
+    parts.append("| Model | Provider | Risk Tier | Lock-in | Deprecation | Stability | Maturity | Composite |")
+    parts.append("|-------|----------|-----------|---------|-------------|-----------|----------|-----------|")
+    for rs in risk_report.scores:
+        parts.append(
+            f"| {rs.model_name} | {rs.provider} | **{rs.risk_tier}** "
+            f"| {rs.vendor_lock_in} | {rs.deprecation_risk} | {rs.api_stability} "
+            f"| {rs.ecosystem_maturity} | {rs.composite_risk} |"
+        )
+    parts.append("")
+
+    parts.append("### Mitigation Notes")
+    parts.append("")
+    for rs in risk_report.scores:
+        if rs.mitigation_notes:
+            parts.append(f"**{rs.model_name}:**")
+            for note in rs.mitigation_notes:
+                parts.append(f"- {note}")
+            parts.append("")
+
+    parts.append("---")
+    parts.append("")
+    return "\n".join(parts)
+
+
+# ---------------------------------------------------------------------------
+# Competitive landscape – plain text
+# ---------------------------------------------------------------------------
+
+def generate_landscape_text(landscape_report) -> str:
+    """Render competitive landscape as plain text."""
+    lines: List[str] = []
+    lines.append("=" * 78)
+    lines.append("  COMPETITIVE LANDSCAPE MAP")
+    lines.append("=" * 78)
+    lines.append("")
+    lines.append(f"  {landscape_report.summary}")
+    lines.append("")
+
+    for seg, models in landscape_report.segments.items():
+        count = len(models)
+        tag = "UNDERSERVED" if count <= 1 else f"{count} competitors"
+        lines.append(f"  {seg} [{tag}]")
+        if models:
+            for m in models:
+                lines.append(f"    • {m}")
+        else:
+            lines.append("    (no models)")
+        lines.append("")
+
+    if landscape_report.underserved_segments:
+        lines.append("  UNDERSERVED SEGMENTS (opportunity zones):")
+        for seg in landscape_report.underserved_segments:
+            lines.append(f"    ★ {seg}")
+        lines.append("")
+
+    return "\n".join(lines)
+
+
+# ---------------------------------------------------------------------------
+# Competitive landscape – markdown
+# ---------------------------------------------------------------------------
+
+def _generate_landscape_markdown(landscape_report) -> str:
+    """Render competitive landscape as Markdown."""
+    parts: List[str] = []
+    parts.append("## 🗺️ Competitive Landscape Map")
+    parts.append("")
+    parts.append(landscape_report.summary)
+    parts.append("")
+
+    parts.append("| Segment | Models | Count |")
+    parts.append("|---------|--------|-------|")
+    for seg, models in landscape_report.segments.items():
+        model_str = ", ".join(models) if models else "*(none)*"
+        parts.append(f"| {seg} | {model_str} | {len(models)} |")
+    parts.append("")
+
+    if landscape_report.underserved_segments:
+        parts.append("### 🏆 Underserved Segments (Opportunity Zones)")
+        parts.append("")
+        for seg in landscape_report.underserved_segments:
+            parts.append(f"- ★ **{seg}**")
+        parts.append("")
+
+    parts.append("---")
+    parts.append("")
+    return "\n".join(parts)
+
+
+# ---------------------------------------------------------------------------
+# Research roadmap – plain text
+# ---------------------------------------------------------------------------
+
+def generate_roadmap_text(roadmap) -> str:
+    """Render research roadmap as plain text."""
+    lines: List[str] = []
+    lines.append("=" * 78)
+    lines.append("  RESEARCH ROADMAP")
+    lines.append("=" * 78)
+    lines.append("")
+    lines.append(f"  {roadmap.executive_summary}")
+    lines.append("")
+
+    current_phase = ""
+    for ms in roadmap.milestones:
+        if ms.phase != current_phase:
+            current_phase = ms.phase
+            lines.append(f"  ━━━ {current_phase} ━━━")
+            lines.append("")
+
+        lines.append(f"  [{ms.priority.upper()}] {ms.title}")
+        lines.append("-" * 78)
+        lines.append(_wrap(f"  {ms.description}"))
+        lines.append("")
+        lines.append(f"    Timeline : {ms.timeline}")
+        lines.append(f"    Effort   : {ms.effort_level}")
+        if ms.deliverables:
+            lines.append("    Deliverables:")
+            for d in ms.deliverables:
+                lines.append(f"      📦 {d}")
+        if ms.success_metrics:
+            lines.append("    Success metrics:")
+            for sm in ms.success_metrics:
+                lines.append(f"      ✓ {sm}")
+        lines.append("")
+
+    return "\n".join(lines)
+
+
+# ---------------------------------------------------------------------------
+# Research roadmap – markdown
+# ---------------------------------------------------------------------------
+
+def _generate_roadmap_markdown(roadmap) -> str:
+    """Render research roadmap as Markdown."""
+    parts: List[str] = []
+    parts.append("## 🗓️ Research Roadmap")
+    parts.append("")
+    parts.append(roadmap.executive_summary)
+    parts.append("")
+
+    current_phase = ""
+    for ms in roadmap.milestones:
+        if ms.phase != current_phase:
+            current_phase = ms.phase
+            parts.append(f"### {current_phase}")
+            parts.append("")
+
+        parts.append(f"#### [{ms.priority.upper()}] {ms.title}")
+        parts.append("")
+        parts.append(f"**Timeline:** {ms.timeline} | **Effort:** {ms.effort_level}")
+        parts.append("")
+        parts.append(ms.description)
+        parts.append("")
+
+        if ms.deliverables:
+            parts.append("**Deliverables:**")
+            for d in ms.deliverables:
+                parts.append(f"- 📦 {d}")
+            parts.append("")
+
+        if ms.success_metrics:
+            parts.append("**Success metrics:**")
+            for sm in ms.success_metrics:
+                parts.append(f"- ✓ {sm}")
+            parts.append("")
+
+        parts.append("---")
+        parts.append("")
+
+    return "\n".join(parts)

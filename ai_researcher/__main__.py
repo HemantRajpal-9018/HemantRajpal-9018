@@ -9,6 +9,10 @@ Run with::
     python -m ai_researcher --opportunities      # opportunity scores only
     python -m ai_researcher --compare "OpenAI o3" "DeepSeek R1"
     python -m ai_researcher --recommend          # best-fit recommendations
+    python -m ai_researcher --velocity           # research velocity analysis
+    python -m ai_researcher --risks              # risk assessment
+    python -m ai_researcher --landscape          # competitive landscape
+    python -m ai_researcher --roadmap            # research roadmap
     python -m ai_researcher --list-models
 """
 
@@ -20,9 +24,13 @@ import sys
 from ai_researcher.agent import ResearcherAgent
 from ai_researcher.report_generator import (
     generate_comparison_text,
+    generate_landscape_text,
     generate_opportunities_text,
     generate_recommendations_text,
+    generate_risks_text,
+    generate_roadmap_text,
     generate_trends_text,
+    generate_velocity_text,
 )
 
 
@@ -32,8 +40,10 @@ def main(argv: list[str] | None = None) -> None:
         description=(
             "AI Researcher Agent – find gaps in the latest reasoning models "
             "as of March 12, 2026.  Includes trend forecasting, head-to-head "
-            "model comparison, innovation opportunity scoring, and best-fit "
-            "model recommendations."
+            "model comparison, innovation opportunity scoring, best-fit "
+            "model recommendations, research velocity analytics, risk "
+            "assessment, competitive landscape mapping, and actionable "
+            "research roadmaps."
         ),
     )
     parser.add_argument(
@@ -56,7 +66,7 @@ def main(argv: list[str] | None = None) -> None:
     parser.add_argument(
         "--full",
         action="store_true",
-        help="Run ALL analysis modules (gaps + trends + opportunities + recommendations).",
+        help="Run ALL analysis modules (gaps + trends + opportunities + recommendations + velocity + risks + landscape + roadmap).",
     )
     parser.add_argument(
         "--trends",
@@ -78,6 +88,26 @@ def main(argv: list[str] | None = None) -> None:
         "--recommend",
         action="store_true",
         help="Show best-fit model recommendations for common use cases.",
+    )
+    parser.add_argument(
+        "--velocity",
+        action="store_true",
+        help="Show research velocity analysis across providers.",
+    )
+    parser.add_argument(
+        "--risks",
+        action="store_true",
+        help="Show risk assessment for all models.",
+    )
+    parser.add_argument(
+        "--landscape",
+        action="store_true",
+        help="Show competitive landscape map across market segments.",
+    )
+    parser.add_argument(
+        "--roadmap",
+        action="store_true",
+        help="Show prioritized research roadmap with milestones.",
     )
 
     args = parser.parse_args(argv)
@@ -108,6 +138,22 @@ def main(argv: list[str] | None = None) -> None:
     elif args.recommend:
         recs = agent.recommend()
         report = generate_recommendations_text(recs)
+
+    elif args.velocity:
+        vel = agent.velocity()
+        report = generate_velocity_text(vel)
+
+    elif args.risks:
+        risk_report = agent.assess_risks()
+        report = generate_risks_text(risk_report)
+
+    elif args.landscape:
+        land = agent.landscape()
+        report = generate_landscape_text(land)
+
+    elif args.roadmap:
+        road = agent.roadmap()
+        report = generate_roadmap_text(road)
 
     elif args.full:
         report = agent.run_full(fmt=args.format)

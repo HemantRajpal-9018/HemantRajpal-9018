@@ -339,6 +339,21 @@ _SYSTEMIC_GAPS: Dict[str, Dict] = {
             "Self-aware reasoning that estimates when internal knowledge is insufficient",
         ],
     },
+    "mathematical_proof": {
+        "title": "Mathematical Proof Verification Remains Fragile",
+        "description": (
+            "Models struggle with rigorous mathematical proofs, especially "
+            "on the hardest Olympiad-tier problems.  Even top performers "
+            "exhibit proof steps that are syntactically plausible but "
+            "logically flawed, and verification of multi-step proofs is "
+            "inconsistent."
+        ),
+        "research_directions": [
+            "Formal proof assistant integration (Lean/Coq) for step verification",
+            "Curriculum learning on progressively harder proof benchmarks",
+            "Proof-sketch → formal-proof translation pipelines",
+        ],
+    },
 }
 
 

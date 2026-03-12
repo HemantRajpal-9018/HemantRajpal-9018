@@ -1,14 +1,23 @@
 """Main agent orchestration module.
 
 ``ResearcherAgent`` ties together the knowledge base, gap analyzer,
-trend forecaster, model comparator, innovation scorer, and report
-generator into a single callable interface.
+trend forecaster, model comparator, innovation scorer, competitive edge
+analytics, research roadmap, and report generator into a single callable
+interface.
 """
 
 from __future__ import annotations
 
 from typing import List, Optional
 
+from ai_researcher.competitive_edge import (
+    LandscapeReport,
+    RiskReport,
+    VelocityReport,
+    analyze_velocity,
+    assess_risks,
+    map_landscape,
+)
 from ai_researcher.gap_analyzer import AnalysisResult, analyze_gaps
 from ai_researcher.innovation_scorer import (
     OpportunityReport,
@@ -30,12 +39,17 @@ from ai_researcher.report_generator import (
     generate_comparison_text,
     generate_full_markdown_report,
     generate_full_text_report,
+    generate_landscape_text,
     generate_markdown_report,
     generate_opportunities_text,
     generate_recommendations_text,
+    generate_risks_text,
+    generate_roadmap_text,
     generate_text_report,
     generate_trends_text,
+    generate_velocity_text,
 )
+from ai_researcher.research_roadmap import ResearchRoadmap, generate_roadmap
 from ai_researcher.trend_forecaster import ForecastResult, forecast_trends
 
 
@@ -84,7 +98,7 @@ class ResearcherAgent:
         return self._result
 
     # ------------------------------------------------------------------
-    # New differentiating capabilities
+    # Differentiating capabilities
     # ------------------------------------------------------------------
 
     def forecast(self) -> ForecastResult:
@@ -103,6 +117,29 @@ class ResearcherAgent:
         """Score each gap by innovation opportunity value."""
         result = self.analyze()
         return score_opportunities(result, self.models)
+
+    # ------------------------------------------------------------------
+    # Competitive edge capabilities (v3)
+    # ------------------------------------------------------------------
+
+    def velocity(self) -> VelocityReport:
+        """Analyze research velocity across providers."""
+        return analyze_velocity(self.models)
+
+    def assess_risks(self) -> RiskReport:
+        """Run risk assessment across all models."""
+        return assess_risks(self.models)
+
+    def landscape(self) -> LandscapeReport:
+        """Map the competitive landscape across market segments."""
+        return map_landscape(self.models)
+
+    def roadmap(self) -> ResearchRoadmap:
+        """Generate a prioritized research roadmap."""
+        gap_result = self.analyze()
+        trends = self.forecast()
+        opportunities = score_opportunities(gap_result, self.models)
+        return generate_roadmap(gap_result, trends, opportunities, self.models)
 
     # ------------------------------------------------------------------
     # Report generation
@@ -124,8 +161,9 @@ class ResearcherAgent:
     def run_full(self, fmt: str = "text") -> str:
         """Run **all** analysis modules and return a comprehensive report.
 
-        Includes: gap analysis, trend forecast, opportunity scores, and
-        best-fit model recommendations.
+        Includes: gap analysis, trend forecast, opportunity scores,
+        best-fit model recommendations, research velocity, risk
+        assessment, competitive landscape, and research roadmap.
 
         Parameters
         ----------
@@ -136,11 +174,17 @@ class ResearcherAgent:
         trends = self.forecast()
         opportunities = self.score_opportunities()
         recommendations = self.recommend()
+        vel = self.velocity()
+        risks = self.assess_risks()
+        land = self.landscape()
+        road = self.roadmap()
 
         if fmt == "md":
             return generate_full_markdown_report(
                 gap_result, trends, opportunities, recommendations,
+                vel, risks, land, road,
             )
         return generate_full_text_report(
             gap_result, trends, opportunities, recommendations,
+            vel, risks, land, road,
         )
