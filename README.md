@@ -76,8 +76,9 @@ A Python-based research agent that catalogues the latest reasoning-focused langu
 | **🗺️ Competitive landscape** | ❌ | ✅ Market segment mapping, overlap analysis & underserved opportunities |
 | **🗓️ Research roadmap** | ❌ | ✅ Phased milestones with deliverables, success metrics & timelines |
 | **🧪 Autoresearch integration** | ❌ | ✅ Generates experiment programs for karpathy/autoresearch (GPU-powered autonomous experiments) |
+| **🖥️ Sandbox config inspector** | ❌ | ✅ Detects CPU, RAM, GPU, CUDA, installed tools & autoresearch compatibility |
 | **Comprehensive reports** | ❌ | ✅ `--full` mode combines all modules into one actionable report |
-| **199 regression tests** | ❌ | ✅ Full cross-module regression suite guarding every invariant |
+| **233 regression tests** | ❌ | ✅ Full cross-module regression suite guarding every invariant |
 
 ### Quick Start
 
@@ -122,6 +123,11 @@ python -m ai_researcher --autoresearch-program               # plain-text
 python -m ai_researcher --autoresearch-program --format md    # program.md for autoresearch
 python -m ai_researcher --autoresearch-program --format md -o program.md  # save directly
 
+# Sandbox environment config (v3.2)
+python -m ai_researcher --sandbox-config                     # plain-text
+python -m ai_researcher --sandbox-config --format md         # Markdown
+python -m ai_researcher --sandbox-config --format md -o sandbox.md  # save to file
+
 # List all tracked models
 python -m ai_researcher --list-models
 ```
@@ -142,7 +148,7 @@ Adaptive Compute Allocation · Formal Reasoning Verification · Native Multi-Mod
 
 ```bash
 pip install pytest
-python -m pytest tests/ -v    # 199 tests across 4 test files
+python -m pytest tests/ -v    # 233 tests across 5 test files
 ```
 
 ### 🧪 Autoresearch Integration (karpathy/autoresearch)
@@ -182,6 +188,40 @@ cp program.md /path/to/autoresearch/program.md
 |------|-----------|---------------|
 | [karpathy/autoresearch](https://github.com/karpathy/autoresearch) | ✅ Yes | Autonomous LLM experiment runner — complements our gap analysis by actually running experiments. **Integrated as `--autoresearch-program`.** |
 | [oddlama/autokernel](https://github.com/oddlama/autokernel) | ❌ No | Linux kernel `.config` file manager (Rust/Lua). Manages kernel build configuration, not related to AI/ML research despite the "auto" prefix. |
+
+### 🖥️ Sandbox Environment Configuration
+
+Check what hardware and software is available in your environment:
+
+```bash
+python -m ai_researcher --sandbox-config
+```
+
+This detects:
+- **CPU** — model, cores, threads, architecture
+- **Memory** — total and available RAM
+- **Disk** — total and free space
+- **GPU** — NVIDIA/AMD detection, CUDA availability, VRAM
+- **OS** — distribution, kernel version, hypervisor
+- **Tools** — Python, pip, git, node, go, docker, nvidia-smi, uv
+- **Autoresearch compatibility** — whether karpathy/autoresearch can run here, with specific blockers listed
+
+**Current sandbox** (GitHub Actions runner):
+
+| Resource | Specification |
+|----------|--------------|
+| CPU | AMD EPYC 7763, 4 vCPUs |
+| RAM | 16 GB |
+| Disk | 145 GB (91 GB free) |
+| GPU | ❌ None (no NVIDIA, no CUDA) |
+| OS | Ubuntu 24.04 LTS |
+| Hypervisor | Microsoft Azure |
+| Python | 3.12.3 |
+
+> **⚠️ GPU Status:** This sandbox does **not** have a GPU. The agent can generate
+> autoresearch experiment programs (`--autoresearch-program`), but you need to run
+> them on a machine with an NVIDIA GPU (H100 recommended). The `--sandbox-config`
+> command will tell you exactly what's missing.
 
 ---
 

@@ -56,6 +56,12 @@ from ai_researcher.autoresearch_adapter import (
     render_program_text,
 )
 from ai_researcher.research_roadmap import ResearchRoadmap, generate_roadmap
+from ai_researcher.sandbox_config import (
+    SandboxConfig,
+    detect_sandbox_config,
+    render_config_markdown,
+    render_config_text,
+)
 from ai_researcher.trend_forecaster import ForecastResult, forecast_trends
 
 
@@ -166,6 +172,24 @@ class ResearcherAgent:
         if fmt == "md":
             return render_program_markdown(program)
         return render_program_text(program)
+
+    def sandbox_config(self, fmt: str = "text") -> str:
+        """Detect and report sandbox environment configuration.
+
+        Parameters
+        ----------
+        fmt : str
+            ``"text"`` for plain text, ``"md"`` for Markdown.
+
+        Returns
+        -------
+        str
+            The rendered sandbox configuration report.
+        """
+        config = detect_sandbox_config()
+        if fmt == "md":
+            return render_config_markdown(config)
+        return render_config_text(config)
 
     # ------------------------------------------------------------------
     # Report generation

@@ -291,4 +291,4 @@ class TestAgentNewCapabilities:
 
     def test_agent_version_updated(self):
         import ai_researcher
-        assert ai_researcher.__version__ == "3.1.0"
+        assert ai_researcher.__version__ == "3.2.0"

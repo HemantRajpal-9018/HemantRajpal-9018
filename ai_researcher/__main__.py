@@ -14,6 +14,7 @@ Run with::
     python -m ai_researcher --landscape          # competitive landscape
     python -m ai_researcher --roadmap            # research roadmap
     python -m ai_researcher --autoresearch-program  # generate autoresearch program.md
+    python -m ai_researcher --sandbox-config     # show sandbox environment config
     python -m ai_researcher --list-models
 """
 
@@ -118,6 +119,14 @@ def main(argv: list[str] | None = None) -> None:
             "karpathy/autoresearch.  Requires NVIDIA GPU to run."
         ),
     )
+    parser.add_argument(
+        "--sandbox-config",
+        action="store_true",
+        help=(
+            "Show sandbox environment configuration: CPU, RAM, GPU, "
+            "installed tools, and autoresearch compatibility."
+        ),
+    )
 
     args = parser.parse_args(argv)
 
@@ -166,6 +175,9 @@ def main(argv: list[str] | None = None) -> None:
 
     elif args.autoresearch_program:
         report = agent.autoresearch_program(fmt=args.format)
+
+    elif args.sandbox_config:
+        report = agent.sandbox_config(fmt=args.format)
 
     elif args.full:
         report = agent.run_full(fmt=args.format)
