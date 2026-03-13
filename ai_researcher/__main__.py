@@ -13,6 +13,7 @@ Run with::
     python -m ai_researcher --risks              # risk assessment
     python -m ai_researcher --landscape          # competitive landscape
     python -m ai_researcher --roadmap            # research roadmap
+    python -m ai_researcher --autoresearch-program  # generate autoresearch program.md
     python -m ai_researcher --list-models
 """
 
@@ -109,6 +110,14 @@ def main(argv: list[str] | None = None) -> None:
         action="store_true",
         help="Show prioritized research roadmap with milestones.",
     )
+    parser.add_argument(
+        "--autoresearch-program",
+        action="store_true",
+        help=(
+            "Generate a program.md experiment file for use with "
+            "karpathy/autoresearch.  Requires NVIDIA GPU to run."
+        ),
+    )
 
     args = parser.parse_args(argv)
 
@@ -154,6 +163,9 @@ def main(argv: list[str] | None = None) -> None:
     elif args.roadmap:
         road = agent.roadmap()
         report = generate_roadmap_text(road)
+
+    elif args.autoresearch_program:
+        report = agent.autoresearch_program(fmt=args.format)
 
     elif args.full:
         report = agent.run_full(fmt=args.format)

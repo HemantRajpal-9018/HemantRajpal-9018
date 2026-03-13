@@ -49,6 +49,12 @@ from ai_researcher.report_generator import (
     generate_trends_text,
     generate_velocity_text,
 )
+from ai_researcher.autoresearch_adapter import (
+    ExperimentProgram,
+    generate_experiment_program,
+    render_program_markdown,
+    render_program_text,
+)
 from ai_researcher.research_roadmap import ResearchRoadmap, generate_roadmap
 from ai_researcher.trend_forecaster import ForecastResult, forecast_trends
 
@@ -140,6 +146,26 @@ class ResearcherAgent:
         trends = self.forecast()
         opportunities = score_opportunities(gap_result, self.models)
         return generate_roadmap(gap_result, trends, opportunities, self.models)
+
+    def autoresearch_program(self, fmt: str = "md") -> str:
+        """Generate an autoresearch experiment program.
+
+        Parameters
+        ----------
+        fmt : str
+            ``"md"`` for Markdown (program.md), ``"text"`` for plain text.
+
+        Returns
+        -------
+        str
+            The rendered experiment program.
+        """
+        gap_result = self.analyze()
+        opportunities = self.score_opportunities()
+        program = generate_experiment_program(gap_result, opportunities, self.models)
+        if fmt == "md":
+            return render_program_markdown(program)
+        return render_program_text(program)
 
     # ------------------------------------------------------------------
     # Report generation

@@ -75,8 +75,9 @@ A Python-based research agent that catalogues the latest reasoning-focused langu
 | **🛡️ Risk assessment** | ❌ | ✅ Vendor lock-in, deprecation risk, API stability & mitigation notes |
 | **🗺️ Competitive landscape** | ❌ | ✅ Market segment mapping, overlap analysis & underserved opportunities |
 | **🗓️ Research roadmap** | ❌ | ✅ Phased milestones with deliverables, success metrics & timelines |
+| **🧪 Autoresearch integration** | ❌ | ✅ Generates experiment programs for karpathy/autoresearch (GPU-powered autonomous experiments) |
 | **Comprehensive reports** | ❌ | ✅ `--full` mode combines all modules into one actionable report |
-| **164 regression tests** | ❌ | ✅ Full cross-module regression suite guarding every invariant |
+| **199 regression tests** | ❌ | ✅ Full cross-module regression suite guarding every invariant |
 
 ### Quick Start
 
@@ -116,6 +117,11 @@ python -m ai_researcher --landscape
 # Prioritized research roadmap (v3)
 python -m ai_researcher --roadmap
 
+# Generate autoresearch experiment program (v3.1)
+python -m ai_researcher --autoresearch-program               # plain-text
+python -m ai_researcher --autoresearch-program --format md    # program.md for autoresearch
+python -m ai_researcher --autoresearch-program --format md -o program.md  # save directly
+
 # List all tracked models
 python -m ai_researcher --list-models
 ```
@@ -136,8 +142,46 @@ Adaptive Compute Allocation · Formal Reasoning Verification · Native Multi-Mod
 
 ```bash
 pip install pytest
-python -m pytest tests/ -v    # 164 tests across 3 test files
+python -m pytest tests/ -v    # 199 tests across 4 test files
 ```
+
+### 🧪 Autoresearch Integration (karpathy/autoresearch)
+
+This agent can generate experiment program files (`program.md`) for use with
+[karpathy/autoresearch](https://github.com/karpathy/autoresearch) — an autonomous
+LLM training experiment runner.
+
+**How the integration works:**
+
+```
+Our agent (gap analysis + opportunity scoring)
+    → autoresearch_adapter
+        → program.md (13 prioritized experiments)
+            → karpathy/autoresearch runs them on GPU
+```
+
+Our agent identifies **what to research** (gaps, priorities); autoresearch **runs the experiments** (trains models, measures improvements).
+
+```bash
+# Generate a program.md file
+python -m ai_researcher --autoresearch-program --format md -o program.md
+
+# Then in your autoresearch clone:
+cp program.md /path/to/autoresearch/program.md
+# Point your AI agent at program.md and let it run overnight
+```
+
+> **⚠️ GPU Required:** Running autoresearch experiments requires an NVIDIA GPU
+> (tested on H100). This adapter only *generates* the program file. See the
+> [autoresearch repo](https://github.com/karpathy/autoresearch) for hardware
+> setup instructions.
+
+### 📋 External Tool Assessment
+
+| Tool | Relevant? | Why / Why Not |
+|------|-----------|---------------|
+| [karpathy/autoresearch](https://github.com/karpathy/autoresearch) | ✅ Yes | Autonomous LLM experiment runner — complements our gap analysis by actually running experiments. **Integrated as `--autoresearch-program`.** |
+| [oddlama/autokernel](https://github.com/oddlama/autokernel) | ❌ No | Linux kernel `.config` file manager (Rust/Lua). Manages kernel build configuration, not related to AI/ML research despite the "auto" prefix. |
 
 ---
 

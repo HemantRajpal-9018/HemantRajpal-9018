@@ -81,7 +81,7 @@ from ai_researcher.trend_forecaster import (
 
 class TestVersionRegression:
     def test_version_is_3_0_0(self):
-        assert __version__ == "3.0.0"
+        assert __version__ == "3.1.0"
 
 
 # ===================================================================
