@@ -57,7 +57,7 @@ class SessionResponse(BaseModel):
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
     """Serve the main research interface."""
-    return templates.TemplateResponse("index.html", {"request": request})
+    return templates.TemplateResponse(request, "index.html")
 
 
 @app.post("/api/research", response_model=SessionResponse)
