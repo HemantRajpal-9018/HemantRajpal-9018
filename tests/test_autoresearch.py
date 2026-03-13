@@ -175,7 +175,8 @@ class TestProgramGeneration:
 
     def test_preamble_mentions_model_count(self):
         program = generate_experiment_program()
-        assert "10" in program.preamble  # 10 models
+        model_count = len(get_reasoning_models())
+        assert str(model_count) in program.preamble
 
     def test_constraints_mention_5_minute_budget(self):
         program = generate_experiment_program()
