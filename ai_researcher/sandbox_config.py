@@ -256,7 +256,27 @@ def _assess_autoresearch(
     python_version: str,
     tools: Dict[str, str],
 ) -> tuple[bool, List[str]]:
-    """Assess whether karpathy/autoresearch can run here."""
+    """Assess whether karpathy/autoresearch can run here.
+
+    Parameters
+    ----------
+    has_nvidia : bool
+        Whether an NVIDIA GPU was detected.
+    has_cuda : bool
+        Whether the CUDA toolkit is installed.
+    gpus : list of GpuInfo
+        Detected GPU devices.
+    python_version : str
+        Python version string (e.g. ``"3.12.3"``).
+    tools : dict
+        Mapping of tool name → version string for installed tools.
+
+    Returns
+    -------
+    tuple of (bool, list of str)
+        ``(can_run, blockers)`` — *can_run* is ``True`` if the environment
+        meets all hard requirements; *blockers* lists any issues found.
+    """
     blockers: List[str] = []
 
     if not has_nvidia:
