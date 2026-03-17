@@ -56,6 +56,13 @@ from ai_researcher.autoresearch_adapter import (
     render_program_text,
 )
 from ai_researcher.research_roadmap import ResearchRoadmap, generate_roadmap
+from ai_researcher.colab_adapter import (
+    ColabNotebook,
+    generate_colab_notebook,
+    render_colab_markdown,
+    render_colab_text,
+    render_notebook_ipynb,
+)
 from ai_researcher.sandbox_config import (
     SandboxConfig,
     detect_sandbox_config,
@@ -190,6 +197,33 @@ class ResearcherAgent:
         if fmt == "md":
             return render_config_markdown(config)
         return render_config_text(config)
+
+    def colab_notebook(self, fmt: str = "ipynb", runtime: str = "GPU") -> str:
+        """Generate a Google Colab notebook for running experiments on GPU/TPU.
+
+        Parameters
+        ----------
+        fmt : str
+            ``"ipynb"`` for a Jupyter notebook (default), ``"md"`` for a
+            Markdown summary, or ``"text"`` for a plain-text summary.
+        runtime : str
+            ``"GPU"`` (default) or ``"TPU"`` target runtime.
+
+        Returns
+        -------
+        str
+            The rendered notebook or summary.
+        """
+        gap_result = self.analyze()
+        opportunities = self.score_opportunities()
+        notebook = generate_colab_notebook(
+            gap_result, opportunities, self.models, runtime_type=runtime,
+        )
+        if fmt == "ipynb":
+            return render_notebook_ipynb(notebook)
+        if fmt == "md":
+            return render_colab_markdown(notebook)
+        return render_colab_text(notebook)
 
     # ------------------------------------------------------------------
     # Report generation

@@ -15,6 +15,7 @@ Run with::
     python -m ai_researcher --roadmap            # research roadmap
     python -m ai_researcher --autoresearch-program  # generate autoresearch program.md
     python -m ai_researcher --sandbox-config     # show sandbox environment config
+    python -m ai_researcher --colab-notebook     # Google Colab notebook for GPU/TPU
     python -m ai_researcher --list-models
 """
 
@@ -127,6 +128,20 @@ def main(argv: list[str] | None = None) -> None:
             "installed tools, and autoresearch compatibility."
         ),
     )
+    parser.add_argument(
+        "--colab-notebook",
+        action="store_true",
+        help=(
+            "Generate a Google Colab notebook (.ipynb) that runs "
+            "autoresearch experiments on Colab's free GPU/TPU hardware."
+        ),
+    )
+    parser.add_argument(
+        "--runtime",
+        choices=["GPU", "TPU"],
+        default="GPU",
+        help="Target Colab runtime: GPU (default) or TPU.",
+    )
 
     args = parser.parse_args(argv)
 
@@ -178,6 +193,17 @@ def main(argv: list[str] | None = None) -> None:
 
     elif args.sandbox_config:
         report = agent.sandbox_config(fmt=args.format)
+
+    elif args.colab_notebook:
+        # For --colab-notebook, default to ipynb unless --format md/text
+        if args.format == "md":
+            report = agent.colab_notebook(fmt="md", runtime=args.runtime)
+        elif args.output and args.output.endswith(".ipynb"):
+            report = agent.colab_notebook(fmt="ipynb", runtime=args.runtime)
+        elif args.format == "text":
+            report = agent.colab_notebook(fmt="text", runtime=args.runtime)
+        else:
+            report = agent.colab_notebook(fmt="text", runtime=args.runtime)
 
     elif args.full:
         report = agent.run_full(fmt=args.format)

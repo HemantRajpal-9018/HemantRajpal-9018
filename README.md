@@ -77,8 +77,9 @@ A Python-based research agent that catalogues the latest reasoning-focused langu
 | **🗓️ Research roadmap** | ❌ | ✅ Phased milestones with deliverables, success metrics & timelines |
 | **🧪 Autoresearch integration** | ❌ | ✅ Generates experiment programs for karpathy/autoresearch (GPU-powered autonomous experiments) |
 | **🖥️ Sandbox config inspector** | ❌ | ✅ Detects CPU, RAM, GPU, CUDA, installed tools & autoresearch compatibility |
+| **☁️ Google Colab integration** | ❌ | ✅ Generates ready-to-run Colab notebooks for GPU (T4/A100) and TPU experiments |
 | **Comprehensive reports** | ❌ | ✅ `--full` mode combines all modules into one actionable report |
-| **233 regression tests** | ❌ | ✅ Full cross-module regression suite guarding every invariant |
+| **275 regression tests** | ❌ | ✅ Full cross-module regression suite guarding every invariant |
 
 ### Quick Start
 
@@ -128,6 +129,12 @@ python -m ai_researcher --sandbox-config                     # plain-text
 python -m ai_researcher --sandbox-config --format md         # Markdown
 python -m ai_researcher --sandbox-config --format md -o sandbox.md  # save to file
 
+# Google Colab notebook for GPU/TPU experiments (v3.3)
+python -m ai_researcher --colab-notebook                     # plain-text summary
+python -m ai_researcher --colab-notebook --format md         # Markdown summary
+python -m ai_researcher --colab-notebook -o experiments.ipynb # Colab .ipynb notebook
+python -m ai_researcher --colab-notebook --runtime TPU       # target TPU instead of GPU
+
 # List all tracked models
 python -m ai_researcher --list-models
 ```
@@ -148,7 +155,7 @@ Adaptive Compute Allocation · Formal Reasoning Verification · Native Multi-Mod
 
 ```bash
 pip install pytest
-python -m pytest tests/ -v    # 233 tests across 5 test files
+python -m pytest tests/ -v    # 275 tests across 6 test files
 ```
 
 ### 🧪 Autoresearch Integration (karpathy/autoresearch)
@@ -222,6 +229,45 @@ This detects:
 > autoresearch experiment programs (`--autoresearch-program`), but you need to run
 > them on a machine with an NVIDIA GPU (H100 recommended). The `--sandbox-config`
 > command will tell you exactly what's missing.
+
+### ☁️ Google Colab Integration — GPU/TPU Experiments
+
+This sandbox has no GPU, but **Google Colab** provides free GPU (T4) and TPU (v2)
+access. The agent can generate ready-to-run Colab notebooks:
+
+```bash
+# Generate a Colab notebook with GPU runtime
+python -m ai_researcher --colab-notebook -o experiments.ipynb
+
+# Target TPU instead
+python -m ai_researcher --colab-notebook --runtime TPU -o experiments.ipynb
+
+# View summary without generating notebook
+python -m ai_researcher --colab-notebook --format md
+```
+
+**How the integration works:**
+
+```
+Our agent (gap analysis + opportunity scoring)
+    → colab_adapter
+        → .ipynb notebook (with experiments embedded)
+            → Upload to Google Colab
+                → Select GPU/TPU runtime
+                    → Run all cells → results!
+```
+
+**Available Colab runtimes:**
+
+| Accelerator | Type | VRAM/HBM | Tier | Best For |
+|-------------|------|----------|------|----------|
+| NVIDIA T4 | GPU | 15 GB | Free | Small-model fine-tuning, inference |
+| NVIDIA L4 | GPU | 22.5 GB | Pro | Medium-model training |
+| NVIDIA A100 | GPU | 40 GB | Pro+ | Large-model training, full autoresearch |
+| TPU v2-8 | TPU | 64 GB | Free | JAX/TF workloads, large batch training |
+
+> **💡 Recommendation:** Use **GPU (T4)** for autoresearch experiments.
+> Use **TPU** if you need more memory or are using JAX-based training.
 
 ---
 
