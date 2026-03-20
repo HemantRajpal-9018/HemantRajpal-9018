@@ -63,6 +63,12 @@ from ai_researcher.colab_adapter import (
     render_colab_text,
     render_notebook_ipynb,
 )
+from ai_researcher.colab_setup import (
+    ColabSetupGuide,
+    generate_setup_guide,
+    render_setup_markdown,
+    render_setup_text,
+)
 from ai_researcher.sandbox_config import (
     SandboxConfig,
     detect_sandbox_config,
@@ -224,6 +230,27 @@ class ResearcherAgent:
         if fmt == "md":
             return render_colab_markdown(notebook)
         return render_colab_text(notebook)
+
+    def colab_link(self, fmt: str = "text") -> str:
+        """Generate GitHub-to-Colab direct connection setup guide.
+
+        Shows one-click "Open in Colab" links and step-by-step instructions
+        for connecting directly from this GitHub repo to Google Colab.
+
+        Parameters
+        ----------
+        fmt : str
+            ``"text"`` for plain-text, ``"md"`` for Markdown.
+
+        Returns
+        -------
+        str
+            The rendered setup guide with direct Colab URLs and badges.
+        """
+        guide = generate_setup_guide()
+        if fmt == "md":
+            return render_setup_markdown(guide)
+        return render_setup_text(guide)
 
     # ------------------------------------------------------------------
     # Report generation

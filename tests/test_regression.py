@@ -80,8 +80,8 @@ from ai_researcher.trend_forecaster import (
 # ===================================================================
 
 class TestVersionRegression:
-    def test_version_is_3_3_0(self):
-        assert __version__ == "3.3.0"
+    def test_version_is_3_4_0(self):
+        assert __version__ == "3.4.0"
 
 
 # ===================================================================

@@ -78,8 +78,9 @@ A Python-based research agent that catalogues the latest reasoning-focused langu
 | **🧪 Autoresearch integration** | ❌ | ✅ Generates experiment programs for karpathy/autoresearch (GPU-powered autonomous experiments) |
 | **🖥️ Sandbox config inspector** | ❌ | ✅ Detects CPU, RAM, GPU, CUDA, installed tools & autoresearch compatibility |
 | **☁️ Google Colab integration** | ❌ | ✅ Generates ready-to-run Colab notebooks for GPU (T4/A100) and TPU experiments |
+| **🔗 GitHub → Colab direct link** | ❌ | ✅ One-click "Open in Colab" badges — run experiments directly from this repo |
 | **Comprehensive reports** | ❌ | ✅ `--full` mode combines all modules into one actionable report |
-| **275 regression tests** | ❌ | ✅ Full cross-module regression suite guarding every invariant |
+| **314 regression tests** | ❌ | ✅ Full cross-module regression suite guarding every invariant |
 
 ### Quick Start
 
@@ -135,6 +136,11 @@ python -m ai_researcher --colab-notebook --format md         # Markdown summary
 python -m ai_researcher --colab-notebook -o experiments.ipynb # Colab .ipynb notebook
 python -m ai_researcher --colab-notebook --runtime TPU       # target TPU instead of GPU
 
+# GitHub → Google Colab direct connection (v3.4)
+python -m ai_researcher --colab-link                         # step-by-step setup (text)
+python -m ai_researcher --colab-link --format md             # Markdown with badges
+python -m ai_researcher --colab-link --format md -o setup.md # save to file
+
 # List all tracked models
 python -m ai_researcher --list-models
 ```
@@ -155,7 +161,7 @@ Adaptive Compute Allocation · Formal Reasoning Verification · Native Multi-Mod
 
 ```bash
 pip install pytest
-python -m pytest tests/ -v    # 275 tests across 6 test files
+python -m pytest tests/ -v    # 314 tests across 7 test files
 ```
 
 ### 🧪 Autoresearch Integration (karpathy/autoresearch)
@@ -268,6 +274,50 @@ Our agent (gap analysis + opportunity scoring)
 
 > **💡 Recommendation:** Use **GPU (T4)** for autoresearch experiments.
 > Use **TPU** if you need more memory or are using JAX-based training.
+
+### 🔗 GitHub → Google Colab — Direct Connection (One Click!)
+
+**No downloads, no uploads** — open experiment notebooks directly from this repo in Google Colab:
+
+<p align="center">
+  <a href="https://colab.research.google.com/github/HemantRajpal-9018/HemantRajpal-9018/blob/main/notebooks/gpu_experiments.ipynb" target="_blank">
+    <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open GPU Experiments In Colab"/>
+  </a>
+  &nbsp;&nbsp;
+  <a href="https://colab.research.google.com/github/HemantRajpal-9018/HemantRajpal-9018/blob/main/notebooks/tpu_experiments.ipynb" target="_blank">
+    <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open TPU Experiments In Colab"/>
+  </a>
+</p>
+
+| Notebook | Runtime | One-Click Link |
+|----------|---------|----------------|
+| GPU experiments | NVIDIA T4 (free) | [Open in Colab](https://colab.research.google.com/github/HemantRajpal-9018/HemantRajpal-9018/blob/main/notebooks/gpu_experiments.ipynb) |
+| TPU experiments | TPU v2 (free) | [Open in Colab](https://colab.research.google.com/github/HemantRajpal-9018/HemantRajpal-9018/blob/main/notebooks/tpu_experiments.ipynb) |
+
+**Step-by-step setup (using the GitHub link only):**
+
+1. **Click** the "Open in Colab" badge above (or copy the link)
+2. Google Colab opens the notebook **directly from GitHub** — no download needed
+3. **Select runtime:** `Runtime → Change runtime type → GPU (T4 free)` or `TPU`
+4. **Run all cells:** `Runtime → Run all` (Ctrl+F9)
+5. The notebook will: detect hardware → install dependencies → run experiments
+6. **Monitor progress** in each cell's output (takes 5–30 minutes)
+7. When done, the final cell **downloads a ZIP** of your experiment results
+8. To re-run with changes: edit cells in Colab, then `Runtime → Run all` again
+
+**How the one-click link works:**
+
+```
+https://colab.research.google.com/github/{owner}/{repo}/blob/{branch}/{notebook_path}
+```
+
+Google Colab natively supports opening any `.ipynb` from a GitHub repo using this URL pattern. The notebooks in `notebooks/` are pre-generated with all 13 experiments embedded.
+
+```bash
+# View the connection setup guide
+python -m ai_researcher --colab-link                         # plain-text
+python -m ai_researcher --colab-link --format md             # Markdown with badges
+```
 
 ---
 

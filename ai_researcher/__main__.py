@@ -16,6 +16,7 @@ Run with::
     python -m ai_researcher --autoresearch-program  # generate autoresearch program.md
     python -m ai_researcher --sandbox-config     # show sandbox environment config
     python -m ai_researcher --colab-notebook     # Google Colab notebook for GPU/TPU
+    python -m ai_researcher --colab-link         # GitHub → Colab direct connection setup
     python -m ai_researcher --list-models
 """
 
@@ -137,6 +138,15 @@ def main(argv: list[str] | None = None) -> None:
         ),
     )
     parser.add_argument(
+        "--colab-link",
+        action="store_true",
+        help=(
+            "Show direct GitHub → Google Colab connection links and "
+            "step-by-step setup instructions.  One-click 'Open in Colab' "
+            "badges let you run experiments directly from this repo."
+        ),
+    )
+    parser.add_argument(
         "--runtime",
         choices=["GPU", "TPU"],
         default="GPU",
@@ -204,6 +214,9 @@ def main(argv: list[str] | None = None) -> None:
             report = agent.colab_notebook(fmt="text", runtime=args.runtime)
         else:
             report = agent.colab_notebook(fmt="text", runtime=args.runtime)
+
+    elif args.colab_link:
+        report = agent.colab_link(fmt=args.format)
 
     elif args.full:
         report = agent.run_full(fmt=args.format)
