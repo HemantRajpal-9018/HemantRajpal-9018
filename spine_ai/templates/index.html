@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spine AI — Research Agent Platform</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="logo">
+                <svg class="logo-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="16" cy="16" r="14" stroke="currentColor" stroke-width="2"/>
+                    <circle cx="16" cy="8" r="3" fill="currentColor"/>
+                    <circle cx="16" cy="16" r="3" fill="currentColor"/>
+                    <circle cx="16" cy="24" r="3" fill="currentColor"/>
+                    <line x1="16" y1="11" x2="16" y2="13" stroke="currentColor" stroke-width="2"/>
+                    <line x1="16" y1="19" x2="16" y2="21" stroke="currentColor" stroke-width="2"/>
+                </svg>
+                <span class="logo-text">Spine AI</span>
+            </div>
+            <nav class="header-nav">
+                <button class="nav-btn active" data-view="research">Research</button>
+                <button class="nav-btn" data-view="sessions">History</button>
+            </nav>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Research Input Section -->
+            <section class="research-input-section" id="researchInput">
+                <div class="input-container">
+                    <h1 class="input-title">What would you like to research?</h1>
+                    <p class="input-subtitle">Our AI agent will decompose your query, search multiple sources, analyze findings, and generate a comprehensive report.</p>
+                    <div class="search-box">
+                        <div class="search-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="8"/>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                            </svg>
+                        </div>
+                        <input type="text" id="queryInput" placeholder="e.g., How are AI agents transforming scientific research?" autocomplete="off">
+                        <button id="startResearch" class="start-btn">
+                            <span class="btn-text">Research</span>
+                            <svg class="btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="5" y1="12" x2="19" y2="12"/>
+                                <polyline points="12 5 19 12 12 19"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="example-queries">
+                        <span class="example-label">Try:</span>
+                        <button class="example-btn" data-query="How are AI agents transforming scientific research?">AI agents in research</button>
+                        <button class="example-btn" data-query="What are the latest breakthroughs in quantum computing?">Quantum computing</button>
+                        <button class="example-btn" data-query="How is machine learning being used in drug discovery?">ML in drug discovery</button>
+                        <button class="example-btn" data-query="What is the current state of autonomous vehicle technology?">Autonomous vehicles</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Workflow Visualization Section -->
+            <section class="workflow-section hidden" id="workflowSection">
+                <div class="workflow-header">
+                    <button class="back-btn" id="backBtn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="19" y1="12" x2="5" y2="12"/>
+                            <polyline points="12 19 5 12 12 5"/>
+                        </svg>
+                        New Research
+                    </button>
+                    <h2 class="workflow-query" id="workflowQuery"></h2>
+                </div>
+
+                <div class="workflow-layout">
+                    <!-- Left: Workflow Steps -->
+                    <div class="workflow-steps" id="workflowSteps">
+                        <h3 class="section-title">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="section-icon">
+                                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                            </svg>
+                            Agent Workflow
+                        </h3>
+                        <div class="steps-container" id="stepsContainer"></div>
+                    </div>
+
+                    <!-- Right: Live Feed -->
+                    <div class="live-feed" id="liveFeed">
+                        <h3 class="section-title">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="section-icon">
+                                <circle cx="12" cy="12" r="2"/>
+                                <path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49m11.31-2.82a10 10 0 0 1 0 14.14m-14.14 0a10 10 0 0 1 0-14.14"/>
+                            </svg>
+                            Live Activity
+                        </h3>
+                        <div class="feed-container" id="feedContainer"></div>
+                    </div>
+                </div>
+
+                <!-- Sources Panel -->
+                <div class="sources-panel" id="sourcesPanel">
+                    <h3 class="section-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="section-icon">
+                            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                        </svg>
+                        Sources Found (<span id="sourceCount">0</span>)
+                    </h3>
+                    <div class="sources-grid" id="sourcesGrid"></div>
+                </div>
+
+                <!-- Report Section -->
+                <div class="report-section hidden" id="reportSection">
+                    <h3 class="section-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="section-icon">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <line x1="16" y1="13" x2="8" y2="13"/>
+                            <line x1="16" y1="17" x2="8" y2="17"/>
+                            <polyline points="10 9 9 9 8 9"/>
+                        </svg>
+                        Research Report
+                    </h3>
+                    <div class="report-content" id="reportContent"></div>
+                </div>
+            </section>
+
+            <!-- Sessions History -->
+            <section class="sessions-section hidden" id="sessionsSection">
+                <h2 class="sessions-title">Research History</h2>
+                <div class="sessions-list" id="sessionsList"></div>
+            </section>
+        </main>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
