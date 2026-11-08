@@ -62,3 +62,42 @@
 
 <!-- Alternative banners you can switch to -->
 <!-- Replace the first <img> with one of these: banner-matrix.svg or banner-glitch.svg -->
+
+---
+
+## 🧠 Spine AI — Research Agent Platform
+
+An AI-powered research agent platform with a real-time workflow visualization UI built on FastAPI.
+
+### Features
+
+- **Query Decomposition** — Breaks research questions into focused sub-queries
+- **Multi-Source Search** — Searches academic databases, industry reports, and publications
+- **Cross-Reference Analysis** — Validates findings across multiple independent sources
+- **Report Synthesis** — Generates comprehensive markdown research reports
+- **Real-Time Streaming** — Server-Sent Events (SSE) for live workflow visualization
+
+### Quick Start
+
+```bash
+pip install -r requirements.txt
+python run.py  # Server starts at http://localhost:8000
+```
+
+### Running Tests
+
+```bash
+python -m pytest tests/test_spine_ai.py -v
+```
+
+### Project Structure
+
+```
+spine_ai/
+├── agent/        # Research engine (query decomposition, search, analysis, reporting)
+├── api/          # FastAPI application and REST endpoints
+├── static/       # CSS and JavaScript assets
+└── templates/    # HTML templates
+tests/
+└── test_spine_ai.py   # 41 tests covering agent logic, data models, and API
+```
